@@ -1,10 +1,16 @@
 require_relative 'piece.rb'
 
 class SlidingPiece < Piece
-  def generate_valid_moves(move_directions)
+  
+  
+  def gen_valid_moves
     valid_moves = []
+    move_directions = self.class::MOVE_DIRECTIONS
     move_directions.each do |direction|
-      new_position = add_vectors(position, direction)
+      p @current_position
+      p direction
+      new_position = add_vectors(@current_position, direction)
+      p new_position
       while is_valid_move?(new_position)
         valid_moves << new_position 
         new_position = add_vectors(new_position,direction)

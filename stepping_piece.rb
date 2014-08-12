@@ -1,7 +1,8 @@
 require_relative 'piece.rb'
 
 class SteppingPiece < Piece
-  def gen_valid_moves(pos_moves)
+  def gen_valid_moves
+    pos_moves = self.class::VECTORS
     pos_moves.select do |pos|
       is_valid_move?(pos)
     end

@@ -23,15 +23,15 @@ class Board
     place_royal_pieces
   end
   
-  def place_piece(class_name, color, pos)
-    nil
+  def place_piece(class_name, pos, color)
+    self[pos] = class_name.new(self, pos, color)
   end
   
   
   def place_pawns
     [1, 6].each do |row|
-      @board[row].map! do |col|
-        Pawn.new(self, [row, col], (row == 1 ? :black : :white))
+      8.times do |col|
+        place_piece(Pawn, [row, col], (row == 1 ? :black : :white))
       end
     end
   end
@@ -39,24 +39,9 @@ class Board
   def place_royal_pieces()
     [0, 7].each do |row|
       SETUP.each_with_index do |piece, col|
-        pos = [row, col]
-        self[pos] = piece.new(self, pos, (row == 0 ? :black : :white))
+        place_piece(piece, [row, col], (row == 0 ? :black : :white))
       end
     end
-    
-    # [0, 7].each do |row|
-#       pieces = SETUP.each
-#       pieces.each_with_index do |piece, index|
-#         piece.color = (row == 0 ? :black : :white)
-#         piece.move([row, index])
-#       end
-#
-#       pieces = [Rook.new(self), Knight.new(self), Bishop.new(self),King.new(self)]
-#       pieces.each_with_index do |piece, index|
-#         piece.color = (row == 0 ? :black : :white)
-#         piece.move([row, 7 - index])
-#       end
-#     end
   end
   
   def render
