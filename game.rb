@@ -14,7 +14,7 @@ class Game
   end
   
   def run
-    until false# @board.won?
+    until @board.won?
       @board.render
       p "you are in check" if @board.in_check?(@current_player.color)
       p "#{@current_player.color.to_s}'s turn"
@@ -26,6 +26,8 @@ class Game
         switch_current_player if @board.move(current_piece, destination)
       end
     end
+    p "Checkmate"
+    
   end
   
   def switch_current_player

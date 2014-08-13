@@ -60,7 +60,7 @@ class Pawn < SteppingPiece
   
   def gen_valid_moves
     moves = []
-    if @color == :white 
+    if @color == :black 
       dir = [[-1,0], [-1,1], [-1,-1]]
       if @current_position[0] == 6
         dir << [-2,0] unless @board[add_vectors(@current_position, [-1, 0])]

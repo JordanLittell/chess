@@ -31,15 +31,16 @@ class Board
   def place_pawns
     [1, 6].each do |row|
       8.times do |col|
-        place_piece(Pawn, [row, col], (row == 1 ? :black : :white))
+        place_piece(Pawn, [row, col], (row == 1 ? :white : :black))
       end
     end
   end
   
+  
   def place_royal_pieces()
     [0, 7].each do |row|
       SETUP.each_with_index do |piece, col|
-        place_piece(piece, [row, col], (row == 0 ? :black : :white))
+        place_piece(piece, [row, col], (row == 0 ? :white : :black))
       end
     end
   end
@@ -69,10 +70,6 @@ class Board
     b
   end
 
-  def won?(color)
-    in_check?((color == :black ? :white : :black))
-  end
-
   def get_king_position(color)
     king_position = nil
     get_all_colored_pieces(color).each do |piece|
@@ -82,9 +79,19 @@ class Board
   end
   
   def get_all_moves(color)
+    all_moves = []
+    get_all_colored_pieces(color).each do |piece|
+      all_moves += piece.gen_valid_moves
+    end
+    all_moves
+  end
+  
+  def get_all_valid_moves(color)
     all_valid_moves = []
     get_all_colored_pieces(color).each do |piece|
-      all_valid_moves += piece.gen_valid_moves
+      all_valid_moves += piece.gen_valid_moves.select do |move|
+        piece.is_valid_move?(move)
+      end
     end
     all_valid_moves
   end
@@ -114,6 +121,19 @@ class Board
   
   def get_all_colored_pieces(color)
     @board.flatten.compact.select {|piece| piece.color == color}
+  end
+  
+  def opposite_color(color)
+    (color == :white ? :black : :white)
+  end
+  
+  def checkmate?(color)
+    variable = get_all_valid_moves(color)
+    in_check?(color) && variable.empty?
+  end
+  
+  def won?
+    checkmate?(:black) || checkmate?(:white)
   end
 
 end

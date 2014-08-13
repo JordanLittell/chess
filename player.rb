@@ -2,9 +2,12 @@ class HumanPlayer
   attr_accessor :color
   
   def get_valid_input
-    input = gets.chomp
-    raise ArgumentError unless input =~ /\A\d \d\z/
-    input.split(" ").map(&:to_i)
+    input = gets.chomp.downcase
+    raise ArgumentError unless input =~ /\A[a-h][1-8]\z/
+    input = input.split("")
+    input[0], input[1] = input[1].to_i - 1, input[0].ord - 97
+    p input
+    input
   end
   
   def play_turn
