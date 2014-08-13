@@ -3,6 +3,7 @@ class HumanPlayer
   
   def get_valid_input
     input = gets.chomp.downcase
+    return "save" if input == "save"
     raise ArgumentError.new("Enter standard chess coordinates ex: f2") unless input =~ /\A[a-h][1-8]\z/
     input = input.split("")
     input[0], input[1] = 8 - input[1].to_i, input[0].ord - 97
@@ -13,6 +14,7 @@ class HumanPlayer
   def play_turn
     p "Enter your piece coords"
     piece_pos = get_valid_input
+    return "save" if piece_pos == "save"
     p "Enter your destination coords"
     destination = get_valid_input
     [piece_pos, destination]

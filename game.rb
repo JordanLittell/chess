@@ -1,5 +1,6 @@
 require_relative 'board.rb'
 require_relative 'player.rb'
+require 'yaml'
 
 class Game
   attr_reader :board
@@ -34,6 +35,7 @@ class Game
   end
   
   def run
+    puts "Enter save at any time to save your game"
     until @board.won? || @board.no_valid_moves?(@current_player.color)
       @board.render
       p "you are in check" if @board.in_check?(@current_player.color)
@@ -42,6 +44,9 @@ class Game
         # sleep 0.1
         # system 'clear'
         positions = @current_player.play_turn
+        if positions == "save"
+          return self.save_game(get_filename)
+        end
         process_turn(positions)
       rescue => e
         p e.message
@@ -58,5 +63,20 @@ class Game
   
   def switch_current_player
     @current_player = (@current_player == @p1 ? @p2 : @p1)
+  end
+  
+  def save_game(filename)
+    Dir.mkdir("games") unless File.exists?("games")
+    File.write("games/#{filename}", self.to_yaml)
+  end
+  
+  def self.load_game(filename)
+    data = File.read("games/#{filename}")
+    YAML.load(data).run
+  end
+  
+  def get_filename
+    puts "What name would you like to save as?"
+    filename = gets.chomp
   end
 end

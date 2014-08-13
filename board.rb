@@ -4,13 +4,16 @@ require_relative 'rook.rb'
 require_relative 'knight.rb'
 require_relative 'bishop.rb'
 require_relative 'pawn.rb'
+require 'colorize'
 
 class Board
   SETUP = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
   
   
-  def initialize(initial = true)
+  def initialize(initial = true, p1_color = :red, p2_color = :blue)
     @board = Array.new(8) { Array.new(8) }
+    @p1_color = p1_color
+    @p2_color = p2_color
     place_initial_pieces if initial
   end
   
@@ -52,12 +55,15 @@ class Board
     puts "  a b c d e f g h  "
     @board.each_with_index do |row, i|
       str = "#{8-i} "
-      row.map do |piece|
+      row.each_with_index do |piece, j|
         if piece.nil?
-          str += "- "
+          piece_str = "  "
+        elsif piece.color == :white
+          piece_str = "#{piece.inspect} ".colorize(:color => @p1_color)
         else
-          str+= "#{piece.inspect} "
+          piece_str = "#{piece.inspect} ".colorize(:color => @p2_color)
         end
+        (i + j).odd? ? str += piece_str.on_white : str += piece_str
       end
       puts str
     end
@@ -105,6 +111,9 @@ class Board
   
   def move(piece, new_pos)
     if piece.is_valid_move?(new_pos)
+      if piece.is_a?(King) || piece.is_a?(Rook)
+        piece.moved = true
+      end
       self[piece.current_position] = nil
       piece.current_position = new_pos
       self[new_pos] = piece
@@ -124,8 +133,8 @@ class Board
     @board.flatten.compact.select { |piece| piece.color == color }
   end
   
-  def get_all_colored_pawns(color)
-    get_all_colored_pieces(color).select { |piece| piece.is_a?(Pawn) }
+  def get_piece_by_type(color, piece_class)
+    get_all_colored_pieces(color).select { |piece| piece.is_a?(piece_class) }
   end
   
   def opposite_color(color)
@@ -146,10 +155,22 @@ class Board
   end
   
   def check_pawn_promotion(color)
-    get_all_colored_pawns(color).find { |pawn| pawn.on_last_row? }
+    get_piece_by_type(color, Pawn).find { |pawn| pawn.on_last_row? }
   end
   
   def no_valid_moves?(color)
     get_all_valid_moves(color).empty?
+  end
+  
+  def can_castle?(color) #not finished
+    king = get_piece_by_type(color, King)
+    rooks = get_piece_by_type(color, Rook)
+    directions = [[0, 1], [0, -1]]
+    
+    return false if in_check?(color) || king.moved? 
+    return false if rooks.none? { |rook| rook.moved? }
+    valid_rooks = rooks.reject { |rook| rook.moved? }
+    
+    
   end
 end
