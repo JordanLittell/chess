@@ -37,19 +37,19 @@ class Game
   def run
     puts "Enter save at any time to save your game"
     until @board.won? || @board.no_valid_moves?(@current_player.color)
+      sleep 0.2
+      system 'clear'
       @board.render
       p "you are in check" if @board.in_check?(@current_player.color)
       p "#{@current_player.color.to_s}'s turn"
       begin
-        # sleep 0.1
-        # system 'clear'
-        positions = @current_player.play_turn
-        if positions == "save"
+        player_input = @current_player.play_turn
+        if player_input == "save"
           return self.save_game(get_filename)
         end
-        process_turn(positions)
-      rescue => e
-        p e.message
+        process_turn(player_input)
+      rescue => error
+        p error.message
         retry
       end
     end

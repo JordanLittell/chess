@@ -67,6 +67,7 @@ class Board
       end
       puts str
     end
+    puts "  a b c d e f g h  "
     puts
   end
   

@@ -25,7 +25,7 @@ class Pawn < SteppingPiece
     
     dir.each do |vec|
       new_pos = add_vectors(@current_position, vec)
-      break unless is_valid_pos?(new_pos)
+      next unless is_valid_pos?(new_pos)
       moves << new_pos if !@board[new_pos] && vec[1] == 0
       moves << new_pos if @board[new_pos] && vec[1] != 0
     end
