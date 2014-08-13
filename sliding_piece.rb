@@ -1,10 +1,6 @@
-# encoding: UTF-8
-
 require_relative 'piece.rb'
 
 class SlidingPiece < Piece
-  
-  
   def gen_valid_moves
     valid_moves = []
     move_directions = self.class::MOVE_DIRECTIONS
@@ -16,30 +12,5 @@ class SlidingPiece < Piece
       end
     end
     valid_moves
-  end
-end
-
-class Queen < SlidingPiece
-  MOVE_DIRECTIONS = [[0,1], [1,0], [-1,0], [0,-1], 
-                     [1,1], [1,-1], [-1,-1], [-1,1]]
-  
-  def inspect
-    (@color == :white ? '♕' : '♛')
-  end
-end
-
-class Rook < SlidingPiece
-  MOVE_DIRECTIONS = [[0,1], [1,0], [-1,0], [0,-1]]
-  
-  def inspect
-    (@color == :white ? '♖' : '♜')
-  end
-end
-
-class Bishop < SlidingPiece
-  MOVE_DIRECTIONS = [[1,1], [1,-1], [-1,-1], [-1,1]]
-  
-  def inspect
-    (@color == :white ? '♗' : '♝')
   end
 end

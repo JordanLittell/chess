@@ -25,8 +25,4 @@ class Piece
     b.move!(b[@current_position],pos)
     gen_valid_moves.include?(pos) && !b.in_check?(@color)
   end
-  
-  def deep_dup(new_board)
-    self.class.new(new_board, @current_position, @color)
-  end
 end
