@@ -16,13 +16,14 @@ class Game
   def run
     until false# @board.won?
       @board.render
+      p "you are in check" if @board.in_check?(@current_player.color)
       p "#{@current_player.color.to_s}'s turn"
-      p "Enter your piece coords"
-      piece_pos = gets.chomp.split(" ").map(&:to_i)
-      p "Enter your destination coords"
-      destination = gets.chomp.split(" ").map(&:to_i)
+      positions = @current_player.play_turn
+      piece_pos = positions[0]
+      destination = positions[1]
       if @current_player.color == @board[piece_pos].color
-        switch_current_player if @board[piece_pos].move(destination)
+        current_piece = @board[piece_pos]
+        switch_current_player if @board.move(current_piece, destination)
       end
     end
   end

@@ -1,5 +1,5 @@
 class Piece
-  attr_accessor :board, :position, :color
+  attr_accessor :board, :current_position, :color
   
   def initialize(board, position, color)
     @current_position = position
@@ -21,18 +21,9 @@ class Piece
   end
   
   def is_valid_move?(pos)
-    gen_valid_moves.include?(pos)
-  end
-
-  def move(new_pos)
-    if is_valid_move?(new_pos)
-      @board[@current_position] = nil
-      @current_position = new_pos
-      @board[new_pos] = self
-      return true
-    end
-    p "Please pick a valid position."
-    false
+    b = @board.deep_dup
+    b.move!(b[@current_position],pos)
+    gen_valid_moves.include?(pos) && !b.in_check?(@color)
   end
   
   def deep_dup(new_board)
