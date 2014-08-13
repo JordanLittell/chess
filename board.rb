@@ -9,7 +9,6 @@ require 'colorize'
 class Board
   SETUP = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
   
-  
   def initialize(initial = true, p1_color = :red, p2_color = :blue)
     @board = Array.new(8) { Array.new(8) }
     @p1_color = p1_color
@@ -25,31 +24,14 @@ class Board
     @board[pos[0]][pos[1]] = value
   end
   
-  def place_initial_pieces
-    place_pawns
-    place_royal_pieces
-  end
-  
-  def place_piece(class_name, pos, color)
-    self[pos] = class_name.new(self, pos, color)
-  end
-  
-  def place_pawns
-    [1, 6].each do |row|
-      8.times do |col|
-        place_piece(Pawn, [row, col], (row == 1 ? :black: :white))
-      end
+  def deep_dup
+    duped_board = Board.new(false)
+    @board.flatten.compact.each do |piece|
+      duped_board.place_piece(piece.class, piece.current_position, piece.color)
     end
+    duped_board
   end
-  
-  def place_royal_pieces()
-    [0, 7].each do |row|
-      SETUP.each_with_index do |piece, col|
-        place_piece(piece, [row, col], (row == 0 ? :black : :white))
-      end
-    end
-  end
-  
+
   def render
     puts ""
     puts "  a b c d e f g h  "
@@ -71,20 +53,10 @@ class Board
     puts
   end
   
-  def deep_dup
-    duped_board = Board.new(false)
-    @board.flatten.compact.each do |piece|
-      duped_board.place_piece(piece.class, piece.current_position, piece.color)
-    end
-    duped_board
+  def place_piece(class_name, pos, color)
+    self[pos] = class_name.new(self, pos, color)
   end
 
-  def get_king_position(color)
-    get_all_colored_pieces(color).find do |piece|
-      piece.is_a?(King)
-    end.current_position
-  end
-  
   def get_all_moves(color)
     all_moves = []
     get_all_colored_pieces(color).each do |piece|
@@ -138,10 +110,6 @@ class Board
     get_all_colored_pieces(color).select { |piece| piece.is_a?(piece_class) }
   end
   
-  def opposite_color(color)
-    (color == :white ? :black : :white)
-  end
-  
   def checkmate?(color)
     variable = get_all_valid_moves(color)
     in_check?(color) && variable.empty?
@@ -150,19 +118,7 @@ class Board
   def won?
     checkmate?(:black) || checkmate?(:white)
   end
-  
-  def promote_pawn(pawn, new_piece_class)
-    place_piece(new_piece_class, pawn.current_position, pawn.color)
-  end
-  
-  def check_pawn_promotion(color)
-    get_piece_by_type(color, Pawn).find { |pawn| pawn.on_last_row? }
-  end
-  
-  def no_valid_moves?(color)
-    get_all_valid_moves(color).empty?
-  end
-  
+
   def can_castle?(color) #not finished
     king = get_piece_by_type(color, King)
     rooks = get_piece_by_type(color, Rook)
@@ -170,8 +126,52 @@ class Board
     
     return false if in_check?(color) || king.moved? 
     return false if rooks.none? { |rook| rook.moved? }
-    valid_rooks = rooks.reject { |rook| rook.moved? }
-    
-    
+    valid_rooks = rooks.reject { |rook| rook.moved? }  
   end
+  
+  def no_valid_moves?(color)
+    get_all_valid_moves(color).empty?
+  end
+  
+  private 
+    def promote_pawn(pawn, new_piece_class)
+      place_piece(new_piece_class, pawn.current_position, pawn.color)
+    end
+      
+    def opposite_color(color)
+      (color == :white ? :black : :white)
+    end
+  
+    def get_king_position(color)
+      get_all_colored_pieces(color).find do |piece|
+        piece.is_a?(King)
+      end.current_position
+    end
+  
+    def check_pawn_promotion(color)
+      get_piece_by_type(color, Pawn).find { |pawn| pawn.on_last_row? }
+    end
+    
+    def place_initial_pieces
+      place_pawns
+      place_royal_pieces
+    end
+  
+    def place_pawns
+      [1, 6].each do |row|
+        8.times do |col|
+          place_piece(Pawn, [row, col], (row == 1 ? :black: :white))
+        end
+      end
+    end
+  
+    def place_royal_pieces()
+      [0, 7].each do |row|
+        SETUP.each_with_index do |piece, col|
+          place_piece(piece, [row, col], (row == 0 ? :black : :white))
+        end
+      end
+    end
+  
+  
 end

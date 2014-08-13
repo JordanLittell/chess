@@ -16,24 +16,6 @@ class Game
     @current_player = @p1
   end
   
-  def process_turn(positions) 
-    piece_pos, destination = positions[0], positions[1]
-    raise ArgumentError.new("no piece at that position!") if @board[piece_pos].nil?
-    if @current_player.color == @board[piece_pos].color
-      current_piece = @board[piece_pos]
-      if @board.move(current_piece, destination)
-        pawn_promoted = @board.check_pawn_promotion(@current_player.color)
-        if pawn_promoted
-          choice = @current_player.get_promotion_choice
-          @board.promote_pawn(pawn_promoted, choice)
-        end
-        switch_current_player
-      end
-    else
-      raise ArgumentError.new("That is not your piece!")
-    end
-  end
-  
   def run
     puts "Enter save at any time to save your game"
     until @board.won? || @board.no_valid_moves?(@current_player.color)
@@ -60,11 +42,7 @@ class Game
       p "Stalemate"
     end
   end
-  
-  def switch_current_player
-    @current_player = (@current_player == @p1 ? @p2 : @p1)
-  end
-  
+
   def save_game(filename)
     Dir.mkdir("games") unless File.exists?("games")
     File.write("games/#{filename}", self.to_yaml)
@@ -75,8 +53,33 @@ class Game
     YAML.load(data).run
   end
   
-  def get_filename
-    puts "What name would you like to save as?"
-    filename = gets.chomp
-  end
+  private
+  
+    def switch_current_player
+      @current_player = (@current_player == @p1 ? @p2 : @p1)
+    end
+  
+    def get_filename
+      puts "What name would you like to save as?"
+      filename = gets.chomp
+    end
+  
+    def process_turn(positions) 
+      piece_pos, destination = positions[0], positions[1]
+      raise ArgumentError.new("no piece at that position!") if @board[piece_pos].nil?
+      if @current_player.color == @board[piece_pos].color
+        current_piece = @board[piece_pos]
+        if @board.move(current_piece, destination)
+          pawn_promoted = @board.check_pawn_promotion(@current_player.color)
+          if pawn_promoted
+            choice = @current_player.get_promotion_choice
+            @board.promote_pawn(pawn_promoted, choice)
+          end
+          switch_current_player
+        end
+      else
+        raise ArgumentError.new("That is not your piece!")
+      end
+    end
+    
 end

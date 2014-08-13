@@ -7,12 +7,13 @@ class SteppingPiece < Piece
     end
   end
   
-  def pos_moves
-    possible_moves = []
-    self.class::VECTORS.each do |vector|
-      new_position = add_vectors(@current_position, vector)
-      possible_moves << new_position
+  private
+    def pos_moves
+      possible_moves = []
+      self.class::VECTORS.each do |vector|
+        new_position = add_vectors(@current_position, vector)
+        possible_moves << new_position
+      end
+      possible_moves
     end
-    possible_moves
-  end
 end
