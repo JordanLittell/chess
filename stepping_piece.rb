@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require_relative 'piece.rb'
 
 class SteppingPiece < Piece
@@ -30,7 +32,7 @@ class King < SteppingPiece
   ]
   
   def inspect
-    'K'
+    (@color == :white ? '♔' : '♚')
   end
 end
 
@@ -47,13 +49,13 @@ class Knight < SteppingPiece
   ]
   
   def inspect
-    'N'
+    (@color == :white ? '♘' : '♞')
   end
 end
 
 class Pawn < SteppingPiece
   def inspect
-    'P'
+    (@color == :white ? '♙' : '♟')
   end
   
   def gen_valid_moves

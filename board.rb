@@ -5,9 +5,9 @@ class Board
   SETUP = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
   
   
-  def initialize
+  def initialize(initial = true)
     @board = Array.new(8) { Array.new(8) }
-    # place_initial_pieces
+    place_initial_pieces if initial
   end
   
   def [](pos)
@@ -75,22 +75,16 @@ class Board
 
   def get_king_position(color)
     king_position = nil
-    @board.each_with_index do |row, x|
-      row.each_with_index do |piece, y|
-        if piece.class == King && piece.color == color
-          king_position = [x,y]
-        end
-      end
+    get_all_colored_pieces(color).each do |piece|
+      king_position = piece.current_position if piece.class == King
     end
     king_position
   end
   
-  def get_all_valid_moves(color)
+  def get_all_moves(color)
     all_valid_moves = []
-    @board.each_with_index do |row, x|
-      row.each_with_index do |piece, y|
-        all_valid_moves += piece.gen_valid_moves unless piece.nil?
-      end
+    get_all_colored_pieces(color).each do |piece|
+      all_valid_moves += piece.gen_valid_moves
     end
     all_valid_moves
   end
@@ -98,7 +92,7 @@ class Board
   def in_check?(color)
     king_position = get_king_position(color)
     opponent_color = (color == :black ? :white : :black)
-    opponent_valid_moves = get_all_valid_moves(opponent_color)
+    opponent_valid_moves = get_all_moves(opponent_color)
     opponent_valid_moves.include?(king_position)
   end
   
@@ -116,6 +110,10 @@ class Board
     self[piece.current_position] = nil
     piece.current_position = new_pos
     self[new_pos] = piece 
+  end
+  
+  def get_all_colored_pieces(color)
+    @board.flatten.compact.select {|piece| piece.color == color}
   end
 
 end

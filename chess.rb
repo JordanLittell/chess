@@ -8,8 +8,3 @@ if __FILE__ == $PROGRAM_NAME
   g = Game.new(p1, p2)
   g.run
 end
-
-# g = Game.new(HumanPlayer.new(:white), HumanPlayer.new(:black))
-# g.run
-# a = Board.new
-# a.render

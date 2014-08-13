@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require_relative 'piece.rb'
 
 class SlidingPiece < Piece
@@ -21,7 +23,7 @@ class Queen < SlidingPiece
   MOVE_DIRECTIONS = [[0,1], [1,0], [-1,0], [0,-1], [1,1], [1,-1], [-1,-1], [-1,1]]
   
   def inspect
-    'Q'
+    (@color == :white ? '♕' : '♛')
   end
 end
 
@@ -29,7 +31,7 @@ class Rook < SlidingPiece
   MOVE_DIRECTIONS = [[0,1], [1,0], [-1,0], [0,-1]]
   
   def inspect
-    'R'
+    (@color == :white ? '♖' : '♜')
   end
 end
 
@@ -37,6 +39,6 @@ class Bishop < SlidingPiece
   MOVE_DIRECTIONS = [[1,1], [1,-1], [-1,-1], [-1,1]]
   
   def inspect
-    'B'
+    (@color == :white ? '♗' : '♝')
   end
 end
