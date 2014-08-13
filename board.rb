@@ -57,6 +57,17 @@ class Board
       puts str
     end
   end
+  
+  def deep_dup
+    b = Board.new
+    @board.each_with_index do |row,x|
+      row.each_with_index do |piece, y|
+        pos = [x, y]
+        b[pos] = piece.deep_dup(b) unless piece.nil?
+      end
+    end
+    b
+  end
 
   # def won?(color)
 #     in_check?((color == :black ? :white : :black))

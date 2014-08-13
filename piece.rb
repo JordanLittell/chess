@@ -11,18 +11,21 @@ class Piece
     [vector1[0] + vector2[0], vector1[1] + vector2[1]]
   end
   
-  def is_valid_move?(pos)
-    if pos[0].between?(0,7) && pos[1].between?(0,7)
-      new_pos_piece = @board[pos]
-      if new_pos_piece
-        return false if new_pos_piece.color == @color
-      end
+  def is_valid_pos?(pos)
+    return false unless pos[0].between?(0,7) && pos[1].between?(0,7)
+    new_pos_piece = @board[pos]
+    if new_pos_piece
+      return false if new_pos_piece.color == @color
     end
-    false
+    true
+  end
+  
+  def is_valid_move?(pos)
+    gen_valid_moves.include?(pos)
   end
 
   def move(new_pos)
-    if gen_valid_moves.include?(new_pos)
+    if is_valid_move?(new_pos)
       @board[@current_position] = nil
       @current_position = new_pos
       @board[new_pos] = self
@@ -30,5 +33,9 @@ class Piece
     end
     p "Please pick a valid position."
     false
+  end
+  
+  def deep_dup(new_board)
+    self.class.new(new_board, @current_position, @color)
   end
 end

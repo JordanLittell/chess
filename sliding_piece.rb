@@ -11,9 +11,9 @@ class SlidingPiece < Piece
       p direction
       new_position = add_vectors(@current_position, direction)
       p new_position
-      while is_valid_move?(new_position)
+      while is_valid_pos?(new_position)
         valid_moves << new_position 
-        new_position = add_vectors(new_position,direction)
+        new_position = add_vectors(new_position, direction)
       end
     end
     valid_moves
