@@ -19,7 +19,7 @@ class Game
   def run
     puts "Enter save at any time to save your game"
     until @board.won? || @board.no_valid_moves?(@current_player.color)
-      # sleep 0.2
+      sleep 0.2
       system 'clear'
       @board.render
       p "you are in check" if @board.in_check?(@current_player.color)
