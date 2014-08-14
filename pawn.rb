@@ -4,7 +4,7 @@ require_relative 'stepping_piece.rb'
 
 class Pawn < SteppingPiece
   def inspect
-    (@color == :white ? '♙' : '♟')
+    '♟'
   end
   
   def gen_valid_moves

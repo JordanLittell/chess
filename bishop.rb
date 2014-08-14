@@ -6,6 +6,6 @@ class Bishop < SlidingPiece
   MOVE_DIRECTIONS = [[1,1], [1,-1], [-1,-1], [-1,1]]
   
   def inspect
-    (@color == :white ? '♗' : '♝')
+    '♝'
   end
 end

@@ -15,6 +15,6 @@ class Knight < SteppingPiece
   ]
   
   def inspect
-    (@color == :white ? '♘' : '♞')
+    '♞'
   end
 end

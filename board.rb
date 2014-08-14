@@ -9,7 +9,7 @@ require 'colorize'
 class Board
   SETUP = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
   
-  def initialize(initial = true, p1_color = :red, p2_color = :blue)
+  def initialize(initial = true, p1_color = :blue, p2_color = :red)
     @board = Array.new(8) { Array.new(8) }
     @p1_color = p1_color
     @p2_color = p2_color
@@ -134,6 +134,7 @@ class Board
   end
   
   private 
+  
     def promote_pawn(pawn, new_piece_class)
       place_piece(new_piece_class, pawn.current_position, pawn.color)
     end

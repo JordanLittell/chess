@@ -23,7 +23,7 @@ class King < SteppingPiece
   ]
   
   def inspect
-    (@color == :white ? '♔' : '♚')
+    '♚'
   end
   
   def castle_positions_to_check # not finished
