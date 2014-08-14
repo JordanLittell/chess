@@ -22,7 +22,6 @@ class HumanPlayer
       raise ArgumentError.new("Enter standard chess coordinates ex: f2") unless input =~ /\A[a-h][1-8]\z/
       input = input.split("")
       input[0], input[1] = 8 - input[1].to_i, input[0].ord - 97
-      p input
       input
     end
 end

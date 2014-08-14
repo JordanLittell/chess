@@ -12,7 +12,7 @@ class Piece
   end
   
   def is_valid_pos?(pos)
-    return false unless pos[0].between?(0,7) && pos[1].between?(0,7)
+    return false unless pos[0].between?(0, 7) && pos[1].between?(0, 7)
     new_pos_piece = @board[pos]
     if new_pos_piece
       return false if new_pos_piece.color == @color
@@ -21,8 +21,8 @@ class Piece
   end
   
   def is_valid_move?(pos)
-    b = @board.deep_dup
-    b.move!(b[@current_position],pos)
-    gen_valid_moves.include?(pos) && !b.in_check?(@color)
+    duped_board = @board.deep_dup
+    duped_board.move!(duped_board[@current_position], pos)
+    gen_valid_moves.include?(pos) && !duped_board.in_check?(@color)
   end
 end

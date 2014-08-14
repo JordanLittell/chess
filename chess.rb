@@ -5,8 +5,9 @@ require_relative 'game.rb'
 if __FILE__ == $PROGRAM_NAME
   
 
-  puts "Would you like to start a new game or load a game or watch two computers battle??"
-  input = gets.chomp
+  puts "Would you like to start a new game or 
+        load a game or watch two computers battle??"
+  input = gets.chomp.downcase
   if input == "new"
     Game.new(HumanPlayer.new, ComputerPlayer.new).run
   elsif input == "load"

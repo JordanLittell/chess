@@ -9,7 +9,7 @@ require 'colorize'
 class Board
   SETUP = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
   
-  def initialize(initial = true, p1_color = :blue, p2_color = :red)
+  def initialize(initial = true, p1_color = :red, p2_color = :blue)
     @board = Array.new(8) { Array.new(8) }
     @p1_color = p1_color
     @p2_color = p2_color
@@ -133,11 +133,15 @@ class Board
     get_all_valid_moves(color).empty?
   end
   
-  private 
+  def check_pawn_promotion(color)
+    get_piece_by_type(color, Pawn).find { |pawn| pawn.on_last_row? }
+  end
   
-    def promote_pawn(pawn, new_piece_class)
-      place_piece(new_piece_class, pawn.current_position, pawn.color)
-    end
+  def promote_pawn(pawn, new_piece_class)
+    place_piece(new_piece_class, pawn.current_position, pawn.color)
+  end
+  
+  private 
       
     def opposite_color(color)
       (color == :white ? :black : :white)
@@ -149,10 +153,6 @@ class Board
       end.current_position
     end
   
-    def check_pawn_promotion(color)
-      get_piece_by_type(color, Pawn).find { |pawn| pawn.on_last_row? }
-    end
-    
     def place_initial_pieces
       place_pawns
       place_royal_pieces
@@ -173,6 +173,5 @@ class Board
         end
       end
     end
-  
   
 end
